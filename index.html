@@ -52,15 +52,14 @@
     </style>
 </head>
 <body>
-    <section class="hero is-primary">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title is-3 hero-dark">偷偷藏点私房钱</h1>
-                <p class="subtitle is-6 hero-dark">全程无网络请求，本机运行的加密工具，运用了 <strong>Argon2id</strong> 和 <strong>AES-256-GCM</strong> 的算法</p>
-            </div>
+<section class="hero is-primary">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title is-3 hero-dark">偷偷藏点私房钱</h1>
+            <p class="subtitle is-6 hero-dark">全程无网络请求，本机运行的加密工具，运用了 <strong>Argon2id</strong> 和 <strong>AES-256-GCM</strong> 的算法</p>
         </div>
-    </section>
-
+    </div>
+</section>
     <section class="section">
         <div class="container">
             <div class="columns is-desktop">
@@ -144,7 +143,7 @@
     <footer class="footer">
         <div class="container">
             <p class="has-text-grey format-line">
-                锁定算法：Argon2id · 内存 256MB · 迭代 32 次 · 并行度 2 · 盐 16B · 密钥长度 32B · AES-256-GCM · IV 12B · 认证 tag 16B · 密文格式 &lt;盐&gt;.&lt;iv&gt;.&lt;认证 tag&gt;.&lt;算法结果&gt;。每份密文独立随机盐，认证 tag 承载完整性校验，密文被篡改或密码错误将无法解密。
+                锁定算法：Argon2id · 内存 256MB · 迭代 32 次 · 并行度 2 · 盐 16B · 密钥长度 32B · AES-256-GCM · IV 12B · 认证 tag 16B · 密文格式 &lt;盐&gt;.&lt;iv&gt;.&lt;认证 tag&gt;.&lt;算法结果&gt;，每份密文独立随机盐，认证 tag 承载完整性校验，密文被篡改或密码错误将无法解密。
             </p>
             <p class="has-text-grey-light format-line mt-2">浏览器端运行，使用 Web Crypto 与 argon2-browser(WASM)。所有计算均在本机完成。</p>
         </div>
