@@ -153,22 +153,6 @@
 
     <div id="toast" class="notification is-info" style="position:fixed;right:16px;bottom:16px;z-index:99"></div>
 
-    <div id="decModal" class="modal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">解密失败</p>
-                <button class="delete" aria-label="关闭"></button>
-            </header>
-            <section class="modal-card-body">
-                <p id="decModalMsg"></p>
-            </section>
-            <footer class="modal-card-foot">
-                <button id="decModalOk" class="button is-primary">知道了</button>
-            </footer>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/argon2-browser@1.18.0/dist/argon2-bundled.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/rxjs@6.6.7/bundles/rxjs.umd.min.js"></script>
     <script src="./argon2id-aes256gcm.umd.js"></script>
@@ -245,18 +229,16 @@
                 btn.classList.toggle("btn-busy", loading);
                 btn.textContent = loading ? (label + "中") : label;
             };
-            const showToast = (msg) => {
+            const showToast = (msg, type) => {
                 const toast = $("toast");
+                const kind = type === "danger" ? "is-danger" : "is-info";
+                toast.classList.remove("is-info", "is-danger");
+                toast.classList.add(kind);
                 toast.textContent = msg;
                 toast.classList.add("show");
                 clearTimeout(toast._t);
                 toast._t = setTimeout(() => toast.classList.remove("show"), 1800);
             };
-            const openModal = (msg) => {
-                $("decModalMsg").textContent = msg;
-                $("decModal").classList.add("is-active");
-            };
-            const closeModal = () => $("decModal").classList.remove("is-active");
             const renderEnc = (state) => {
                 const setLoading = btnLoading($("btnEncrypt"), "加密");
                 if (state.status === "working") { setLoading(true); $("encOut").value = ""; }
@@ -272,7 +254,7 @@
                 else {
                     setLoading(false);
                     if (state.status === "done") { $("decOut").value = state.value; showToast("解密成功，认证通过"); }
-                    else if (state.status === "error") openModal("解密失败：" + state.msg + "。请检查密码和密文是否与加密时一致。");
+                    else if (state.status === "error") showToast("解密失败：" + state.msg + "。请检查密码和密文是否与加密时一致。", "danger");
                 }
             };
 
@@ -322,11 +304,6 @@
             };
             bindEye($("encPass"), $("encEye"));
             bindEye($("decPass"), $("decEye"));
-
-            $("decModalOk").addEventListener("click", closeModal);
-            document.querySelector("#decModal .delete").addEventListener("click", closeModal);
-            document.querySelector("#decModal .modal-background").addEventListener("click", closeModal);
-            document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
         })();
     </script>
 </body>
