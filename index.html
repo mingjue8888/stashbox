@@ -5,8 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="./logo.png">
     <title>私房钱 - 全程无网络请求，本机运行的加密工具</title>
+    <script src="https://cdn.jsdelivr.net/npm/argon2-browser@1.18.0/dist/argon2-bundled.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/joi@18.2.9/dist/joi-browser.min.js"></script>
+    <script src="./argon2id-aes256gcm.umd.js"></script>
 </head>
 <body>
     Hello world!
+    <script>
+        async function main() {
+            const crypt = argon2idAes256gcm({
+                argonMemory: 262144,       // Argon2 内存 KiB
+                argonTimes: 32,            // 迭代次数
+                argonParallelism: 2,      // 并行度
+            });
+
+            const box  = await crypt.encrypt("SuperPassword.123456.IamYourDaddy", "Hello world!");
+            const text = await crypt.decrypt("SuperPassword.123456.IamYourDaddy", box);
+
+            console.log(box, text);
+        }
+
+        main();
+    </script>
 </body>
 </html>
