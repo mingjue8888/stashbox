@@ -223,11 +223,10 @@
             const handleOp = (req, run) => (req.status === "ok" ? run(req) : of(req));
 
             /* ---------- 渲染（纯函数 → DOM） ---------- */
-            const btnLoading = (btn, label) => (loading) => {
+            const btnLoading = (btn) => (loading) => {
                 btn.disabled = loading;
                 btn.classList.toggle("is-loading", loading);
-                btn.classList.toggle("btn-busy", loading);
-                btn.textContent = loading ? (label + "中") : label;
+                btn.classList.toggle("is-dark", loading);
             };
             const showToast = (msg, type) => {
                 const toast = $("toast");
@@ -240,7 +239,7 @@
                 toast._t = setTimeout(() => toast.classList.remove("show"), 1800);
             };
             const renderEnc = (state) => {
-                const setLoading = btnLoading($("btnEncrypt"), "加密");
+                const setLoading = btnLoading($("btnEncrypt"));
                 if (state.status === "working") { setLoading(true); $("encOut").value = ""; }
                 else {
                     setLoading(false);
@@ -249,7 +248,7 @@
                 }
             };
             const renderDec = (state) => {
-                const setLoading = btnLoading($("btnDecrypt"), "解密");
+                const setLoading = btnLoading($("btnDecrypt"));
                 if (state.status === "working") { setLoading(true); $("decOut").value = ""; }
                 else {
                     setLoading(false);
