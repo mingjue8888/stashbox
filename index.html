@@ -165,7 +165,7 @@
             const { map, switchMap, startWith, catchError } = rxjs.operators;
 
             /* ---------- 加密实例（参数写死，不暴露给用户） ---------- */
-            const crypt = argon2id_aes256gcm({
+            const crypt = argon2idAes256gcm({
                 argonMemory: 262144,  // 256 MiB
                 argonTimes: 32,
                 argonParallelism: 2
@@ -223,10 +223,11 @@
             const handleOp = (req, run) => (req.status === "ok" ? run(req) : of(req));
 
             /* ---------- 渲染（纯函数 → DOM） ---------- */
-            const btnLoading = (btn) => (loading) => {
-                btn.disabled = loading;
+            const btnLoading = (btn, label) => (loading) => {
+                btn.disabled = loading;                       // 防误触：计算期间禁用按钮
                 btn.classList.toggle("is-loading", loading);
                 btn.classList.toggle("is-dark", loading);
+                btn.textContent = loading ? "" : label;       // loading 时按钮内不留字，只留转圈
             };
             const showToast = (msg, type) => {
                 const toast = $("toast");
@@ -239,7 +240,7 @@
                 toast._t = setTimeout(() => toast.classList.remove("show"), 1800);
             };
             const renderEnc = (state) => {
-                const setLoading = btnLoading($("btnEncrypt"));
+                const setLoading = btnLoading($("btnEncrypt"), "加密");
                 if (state.status === "working") { setLoading(true); $("encOut").value = ""; }
                 else {
                     setLoading(false);
@@ -248,7 +249,7 @@
                 }
             };
             const renderDec = (state) => {
-                const setLoading = btnLoading($("btnDecrypt"));
+                const setLoading = btnLoading($("btnDecrypt"), "解密");
                 if (state.status === "working") { setLoading(true); $("decOut").value = ""; }
                 else {
                     setLoading(false);
