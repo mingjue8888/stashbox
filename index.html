@@ -258,7 +258,7 @@
         toast.textContent = msg;
         toast.classList.add("show");
         clearTimeout(toast._t);
-        toast._t = setTimeout(() => toast.classList.remove("show"), 3600);
+        toast._t = setTimeout(() => toast.classList.remove("show"), 1800);
     };
     const renderEnc = (state) => {
         const setLoading = btnLoading($("btnEncrypt"), "加密");
