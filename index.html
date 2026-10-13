@@ -258,11 +258,11 @@
         toast.textContent = msg;
         toast.classList.add("show");
         clearTimeout(toast._t);
-        toast._t = setTimeout(() => toast.classList.remove("show"), 1800);
+        toast._t = setTimeout(() => toast.classList.remove("show"), 3600);
     };
     const renderEnc = (state) => {
         const setLoading = btnLoading($("btnEncrypt"), "加密");
-        if (state.status === "working") { setLoading(true); $("encOut").value = ""; }
+        if (state.status === "working") { setLoading(true); $("encOut").value = ""; showToast("加密中"); }
         else {
             setLoading(false);
             if (state.status === "done") { $("encOut").value = state.value; showToast("加密完成"); }
@@ -271,7 +271,7 @@
     };
     const renderDec = (state) => {
         const setLoading = btnLoading($("btnDecrypt"), "解密");
-        if (state.status === "working") { setLoading(true); $("decOut").value = ""; }
+        if (state.status === "working") { setLoading(true); $("decOut").value = ""; showToast("解密中"); }
         else {
             setLoading(false);
             if (state.status === "done") { $("decOut").value = state.value; showToast("解密成功，认证通过"); }
