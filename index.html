@@ -14,8 +14,14 @@
         .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
         #encOut, #decBox { resize: vertical; min-height: 96px; }
         #btnEncrypt, #btnDecrypt { min-height: 2.5em; }  /* loading 无字时保持原高度 */
-        #toast { transition: opacity .25s; opacity: 0; pointer-events: none; }
-        #toast.show { opacity: 1; }
+        #toast { opacity: 0; pointer-events: none; }
+        #toast.show { animation: toastFlash 2.2s ease forwards; }
+        @keyframes toastFlash {
+            0% { opacity: 0; }
+            12% { opacity: 1; }
+            88% { opacity: 1; }
+            100% { opacity: 0; }
+        }
         .tool-card { max-width: 720px; margin: 0 auto; }
         .tabs.is-boxed li.is-active a { background: #485fc7; color: #fff; }
         .tabs a { min-width: 120px; justify-content: center; }
@@ -256,9 +262,10 @@
         toast.classList.remove("is-info", "is-danger");
         toast.classList.add(kind);
         toast.textContent = msg;
+        // 用 CSS 动画自动淡出（不受主线程阻塞影响），重触发需先移除 show 再强制重排
+        toast.classList.remove("show");
+        void toast.offsetWidth;
         toast.classList.add("show");
-        clearTimeout(toast._t);
-        toast._t = setTimeout(() => toast.classList.remove("show"), 2000);
     };
     const renderEnc = (state) => {
         const setLoading = btnLoading($("btnEncrypt"), "加密");
