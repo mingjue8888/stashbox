@@ -42,6 +42,11 @@
 }(typeof self !== "undefined" ? self : this, function () {
     "use strict";
 
+    // 工厂内部自取全局对象（外层 UMD 的 root 不在本作用域，这里自己取，浏览器=window/self）
+    var globalRoot = (typeof self !== "undefined") ? self
+        : (typeof globalThis !== "undefined") ? globalThis
+            : this;
+
     // ============ 固定常量（安全最优，不开放配置） ============
     var ARG_ALG = "Argon2id";  // 仅 Argon2id
     var SALT_LEN = 16;         // Argon2 盐（字节）
@@ -83,7 +88,7 @@
 
     // ============ Argon2id：浏览器端（argon2-browser，WASM） ============
     function browserArgon2() {
-        var a2 = root.argon2;
+        var a2 = globalRoot.argon2;
         if (!a2) {
             throw new Error("浏览器 Argon2 需要先引入 argon2-browser。请在 argon2id-aes256gcm.js 之前加：" +
                 "<script src=\"https://cdn.jsdelivr.net/npm/argon2-browser@1.18.0/dist/argon2-bundled.min.js\"></script>");
@@ -191,7 +196,7 @@
                 supportCache = true;
             } catch (e) { supportCache = false; }
         } else {
-            supportCache = !!root.argon2;
+            supportCache = !!globalRoot.argon2;
         }
         return supportCache;
     }
