@@ -6,31 +6,298 @@
     <link rel="icon" type="image/x-icon" href="./logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <title>私房钱 - 全程无网络请求，本机运行的加密工具</title>
-    <script src="https://cdn.jsdelivr.net/npm/argon2-browser@1.18.0/dist/argon2-bundled.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/joi@18.2.9/dist/joi-browser.min.js"></script>
-    <script src="./argon2id-aes256gcm.umd.js"></script>
+    <style>
+        html { scroll-behavior: auto; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", "Noto Sans SC", sans-serif; }
+        .hero { background: #f5f7fb; }
+        .hero .hero-dark { color: #000 !important; }
+        .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+        #encOut, #decBox { resize: vertical; min-height: 96px; }
+        #toast { transition: opacity .25s; opacity: 0; pointer-events: none; }
+        #toast.show { opacity: 1; }
+        .tool-card { max-width: 720px; margin: 0 auto; }
+        .tabs.is-boxed li.is-active a { background: #485fc7; color: #fff; }
+        .tabs a { min-width: 120px; justify-content: center; }
+        .format-line { font-size: .85rem; }
+    </style>
 </head>
 <body>
-    Hello world!
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title is-3 hero-dark">偷偷藏点私房钱</h1>
+                <p class="subtitle is-6 hero-dark">全程无网络请求，本机运行的加密工具，运用了 <strong>Argon2id</strong> 和 <strong>AES-256-GCM</strong> 的算法</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-desktop">
+                <!-- ===== 加密 ===== -->
+                <div class="column is-half">
+                    <div class="box">
+                        <h2 class="title is-4">加密</h2>
+
+                        <div class="field">
+                            <label class="label">密码</label>
+                            <div class="field has-addons">
+                                <div class="control is-expanded">
+                                    <input id="encPass" class="input" type="password" placeholder="请输入只有你自己知道的密码">
+                                </div>
+                                <div class="control">
+                                    <button id="encEye" class="button" type="button" aria-label="长按显示密码"><span class="icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">明文</label>
+                            <div class="control">
+                                <textarea id="encText" class="textarea" placeholder="请输入你要加密的文本内容，加密后明文建议不要保留"></textarea>
+                            </div>
+                        </div>
+
+                        <button id="btnEncrypt" class="button is-primary is-fullwidth">加密</button>
+
+                        <div class="field mt-4">
+                            <label class="label">密文</label>
+                            <div class="control">
+                                <textarea id="encOut" class="textarea mono" readonly placeholder="加密结果将在这里显示，建议备几份藏在你自己能找到的别人不知道的任意互联网角落里"></textarea>
+                            </div>
+                            <div class="has-text-right mt-2"><button id="btnCopy" class="button is-small is-light">复制密文</button></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== 解密 ===== -->
+                <div class="column is-half">
+                    <div class="box">
+                        <h2 class="title is-4">解密</h2>
+
+                        <div class="field">
+                            <label class="label">密码</label>
+                            <div class="field has-addons">
+                                <div class="control is-expanded">
+                                    <input id="decPass" class="input" type="password" placeholder="请输入只有你自己知道的密码">
+                                </div>
+                                <div class="control">
+                                    <button id="decEye" class="button" type="button" aria-label="长按显示密码"><span class="icon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg></span></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">密文</label>
+                            <div class="control">
+                                <textarea id="decBox" class="textarea mono" placeholder="请粘贴你上一次藏好的加密文本"></textarea>
+                            </div>
+                        </div>
+
+                        <button id="btnDecrypt" class="button is-primary is-fullwidth">解密</button>
+
+                        <div id="decStatus" class="notification mt-4" style="display:none"></div>
+
+                        <div class="field mt-4">
+                            <label class="label">明文</label>
+                            <div class="control">
+                                <textarea id="decOut" class="textarea" readonly placeholder="解密结果将在这里显示，拿回你原有的明文后，请不要逗留太久，把浏览痕迹删掉"></textarea>
+                            </div>
+                            <div class="has-text-right mt-2"><button id="btnCopyPlain" class="button is-small is-light">复制明文</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="has-text-grey format-line">
+                锁定算法：Argon2id · 内存 256MB · 迭代 32 次 · 并行度 2 · 盐 16B · 密钥长度 32B · AES-256-GCM · IV 12B · 认证 tag 16B · 密文格式 &lt;盐&gt;.&lt;iv&gt;.&lt;认证 tag&gt;.&lt;算法结果&gt;。每份密文独立随机盐，认证 tag 承载完整性校验，密文被篡改或密码错误将无法解密。
+            </p>
+            <p class="has-text-grey-light format-line mt-2">浏览器端运行，使用 Web Crypto 与 argon2-browser(WASM)。所有计算均在本机完成。</p>
+        </div>
+    </footer>
+
+    <div id="toast" class="notification is-info" style="position:fixed;right:16px;bottom:16px;z-index:99"></div>
+
+    <div id="decModal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">解密失败</p>
+                <button class="delete" aria-label="关闭"></button>
+            </header>
+            <section class="modal-card-body">
+                <p id="decModalMsg"></p>
+            </section>
+            <footer class="modal-card-foot">
+                <button id="decModalOk" class="button is-primary">知道了</button>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/argon2-browser@1.18.0/dist/argon2-bundled.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/rxjs@6.6.7/bundles/rxjs.umd.min.js"></script>
+    <script src="./argon2id-aes256gcm.umd.js"></script>
     <script>
-        const password = "SuperPassword.123456.IamYourDaddy";
-        const text = "Hello world!";
+        const $ = (id) => document.getElementById(id);
+        const { fromEvent, of, from, defer } = rxjs;
+        const { map, switchMap, startWith, catchError } = rxjs.operators;
 
         const crypt = argon2id_aes256gcm({
-            argonMemory: 262144,       // Argon2 内存 KiB
-            argonTimes: 32,            // 迭代次数
-            argonParallelism: 2,      // 并行度
+            argonMemory: 262144,
+            argonTimes: 32,
+            argonParallelism: 2
         });
 
-        (async function() {
-            console.time("encrypt");
-            const encryptedText  = await crypt.encrypt(password, text);
-            console.timeEnd("encrypt");
-            console.time("decrypt");
-            const sourceText = await crypt.decrypt(password, encryptedText);
-            console.timeEnd("decrypt");
-            console.log(encryptedText, sourceText);
-        })();
+        const okState = (extra) => {
+            const s = { status: "ok" };
+            for (const k in extra) s[k] = extra[k];
+            return s;
+        };
+        const errState = (msg) => ({ status: "error", msg });
+
+        /* ---------- 密码校验：前后空格去掉 + 16 位复杂密码 ---------- */
+        const validatePassword = (raw) => {
+            const pass = (raw || "").trim();                       // 去掉前后空格
+            if (pass.length < 16)              return { ok: false, pass: "", msg: "密码至少 16 位" };
+            if (/\s/.test(pass))               return { ok: false, pass: "", msg: "密码中间不能有空格" };
+            if (!/[a-z]/.test(pass))           return { ok: false, pass: "", msg: "密码需包含小写字母" };
+            if (!/[A-Z]/.test(pass))           return { ok: false, pass: "", msg: "密码需包含大写字母" };
+            if (!/[0-9]/.test(pass))           return { ok: false, pass: "", msg: "密码需包含数字" };
+            if (!/[^A-Za-z0-9]/.test(pass))    return { ok: false, pass: "", msg: "密码需包含标点符号" };
+            return { ok: true, pass, msg: "" };
+        };
+
+        /* ---------- DOM 读取（纯函数） ---------- */
+        const readEnc = () => ({ pass: $("encPass").value, text: $("encText").value });
+        const readDec = () => ({ pass: $("decPass").value, box: $("decBox").value.trim() });
+
+        /* ---------- 请求校验（纯函数） ---------- */
+        const validateEncReq = (f) => {
+            if (!f.text.trim()) return errState("请填写要加密的明文");
+            const v = validatePassword(f.pass);
+            return v.ok ? okState({ pass: v.pass, text: f.text }) : errState(v.msg);
+        };
+        const validateDecReq = (f) => {
+            if (!f.box) return errState("请粘贴密文");
+            const v = validatePassword(f.pass);
+            return v.ok ? okState({ pass: v.pass, box: f.box }) : errState(v.msg);
+        };
+
+        /* ---------- 异步操作 → observable（先 working 再 done/error） ---------- */
+        const runEncrypt = (req) =>
+            defer(() => from(crypt.encrypt(req.pass, req.text))).pipe(
+                startWith({ status: "working" }),
+                map((v) => ({ status: "done", value: v })),
+                catchError((e) => of(errState(e.message || String(e))))
+            );
+        const runDecrypt = (req) =>
+            defer(() => from(crypt.decrypt(req.pass, req.box))).pipe(
+                startWith({ status: "working" }),
+                map((v) => ({ status: "done", value: v })),
+                catchError((e) => of(errState(e.message || String(e))))
+            );
+        const handleOp = (req, run) => (req.status === "ok" ? run(req) : of(req));
+
+        /* ---------- 渲染（纯函数 → DOM） ---------- */
+        const btnLoading = (btn, label) => (loading) => {
+            btn.disabled = loading;
+            btn.classList.toggle("is-loading", loading);
+            btn.classList.toggle("is-light", loading);
+            btn.textContent = loading ? (label + "中") : label;
+        };
+        const showToast = (msg) => {
+            const toast = $("toast");
+            toast.textContent = msg;
+            toast.classList.add("show");
+            clearTimeout(toast._t);
+            toast._t = setTimeout(() => toast.classList.remove("show"), 1800);
+        };
+        const setStatus = (type, html) => {
+            const decStatus = $("decStatus");
+            decStatus.className = "notification " + (type === "ok" ? "is-success" : "is-danger") + " mt-4";
+            decStatus.innerHTML = html;
+            decStatus.style.display = "";
+        };
+        const openModal = (msg) => {
+            $("decModalMsg").textContent = msg;
+            $("decModal").classList.add("is-active");
+        };
+        const closeModal = () => $("decModal").classList.remove("is-active");
+        const renderEnc = (state) => {
+            const setLoading = btnLoading($("btnEncrypt"), "加密");
+            if (state.status === "working") { setLoading(true); $("encOut").value = ""; }
+            else {
+                setLoading(false);
+                if (state.status === "done") { $("encOut").value = state.value; showToast("加密完成"); }
+                else if (state.status === "error") showToast("加密失败：" + state.msg);
+            }
+        };
+        const renderDec = (state) => {
+            const setLoading = btnLoading($("btnDecrypt"), "解密");
+            if (state.status === "working") { setLoading(true); $("decOut").value = ""; }
+            else {
+                setLoading(false);
+                if (state.status === "done") { $("decOut").value = state.value; setStatus("ok", "解密成功，认证通过。"); }
+                else if (state.status === "error") openModal("解密失败：" + state.msg + "。请检查密码和密文是否与加密时一致。");
+            }
+        };
+
+        /* ---------- 复制（RxJS 流） ---------- */
+        const renderCopy = (s, okMsg, out) => {
+            if (s.status === "done") return showToast(okMsg);
+            if (s.status === "fallback") { out.select(); return showToast("复制失败，已帮你选中，请 Ctrl+C"); }
+            if (s.status === "none") return showToast(okMsg === "已复制密文" ? "还没有密文可复制" : "还没有明文可复制");
+        };
+        const buildCopy = (btn, out, okMsg) => {
+            fromEvent(btn, "click").pipe(
+                map(() => out.value),
+                switchMap((text) =>
+                    text
+                        ? from(navigator.clipboard.writeText(text)).pipe(
+                            map(() => ({ status: "done" })),
+                            catchError(() => of({ status: "fallback" }))
+                        )
+                        : of({ status: "none" })
+                )
+            ).subscribe((s) => renderCopy(s, okMsg, out));
+        };
+
+        /* ---------- 组装数据流（RxJS 订阅） ---------- */
+        fromEvent($("btnEncrypt"), "click").pipe(
+            map(readEnc),
+            map(validateEncReq),
+            switchMap((req) => handleOp(req, runEncrypt))
+        ).subscribe(renderEnc);
+
+        fromEvent($("btnDecrypt"), "click").pipe(
+            map(readDec),
+            map(validateDecReq),
+            switchMap((req) => handleOp(req, runDecrypt))
+        ).subscribe(renderDec);
+
+        buildCopy($("btnCopy"), $("encOut"), "已复制密文");
+        buildCopy($("btnCopyPlain"), $("decOut"), "已复制明文");
+
+        /* ---------- 密码框长按显示（函数式） ---------- */
+        const bindEye = (input, btn) => {
+            const show = (e) => { if (e) e.preventDefault(); input.type = "text"; };
+            const hide = () => { input.type = "password"; };
+            btn.addEventListener("pointerdown", show);
+            btn.addEventListener("pointerup", hide);
+            btn.addEventListener("pointerleave", hide);
+        };
+        bindEye($("encPass"), $("encEye"));
+        bindEye($("decPass"), $("decEye"));
+
+        $("decStatus").addEventListener("click", () => { $("decStatus").style.display = "none"; });
+        $("decModalOk").addEventListener("click", closeModal);
+        document.querySelector("#decModal .delete").addEventListener("click", closeModal);
+        document.querySelector("#decModal .modal-background").addEventListener("click", closeModal);
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
     </script>
 </body>
 </html>
