@@ -165,7 +165,7 @@
             const { map, switchMap, startWith, catchError } = rxjs.operators;
 
             /* ---------- 加密实例（参数写死，不暴露给用户） ---------- */
-            const crypt = argon2idAes256gcm({
+            const crypt = argon2id_aes256gcm({
                 argonMemory: 262144,  // 256 MiB
                 argonTimes: 32,
                 argonParallelism: 2
