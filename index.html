@@ -19,6 +19,15 @@
         .tabs.is-boxed li.is-active a { background: #485fc7; color: #fff; }
         .tabs a { min-width: 120px; justify-content: center; }
         .format-line { font-size: .85rem; }
+
+        /* 锁定浅色配色：中间白、底部灰，不受系统深色模式影响 */
+        :root { color-scheme: light; }
+        body { background: #fff; color: #212121; }
+        .box, .modal-card { background: #fff; color: #212121; }
+        .input, .textarea { background: #fff; color: #212121; }
+        .label { color: #363636; }
+        .footer { background-color: #f5f5f5 !important; color: #4a4a4a; }
+        .notification { color: #4a4a4a; }
     </style>
 </head>
 <body>
@@ -298,7 +307,6 @@
         document.querySelector("#decModal .delete").addEventListener("click", closeModal);
         document.querySelector("#decModal .modal-background").addEventListener("click", closeModal);
         document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
-
     </script>
 </body>
 </html>
