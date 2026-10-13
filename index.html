@@ -177,7 +177,7 @@
         (function () {
             "use strict";
             const $ = (id) => document.getElementById(id);
-            const { fromEvent, of, from, defer } = rxjs;
+            const { fromEvent, of, from, defer, pipe } = rxjs;
             const { map, switchMap, startWith, catchError } = rxjs.operators;
 
             /* ---------- 加密实例（参数写死，不暴露给用户） ---------- */
@@ -226,14 +226,14 @@
             /* ---------- 异步操作 → observable（先 working 再 done/error） ---------- */
             const runEncrypt = (req) =>
                 defer(() => from(crypt.encrypt(req.pass, req.text))).pipe(
-                    startWith({ status: "working" }),
                     map((v) => ({ status: "done", value: v })),
+                    startWith({ status: "working" }),
                     catchError((e) => of(errState(e.message || String(e))))
                 );
             const runDecrypt = (req) =>
                 defer(() => from(crypt.decrypt(req.pass, req.box))).pipe(
-                    startWith({ status: "working" }),
                     map((v) => ({ status: "done", value: v })),
+                    startWith({ status: "working" }),
                     catchError((e) => of(errState(e.message || String(e))))
                 );
             const handleOp = (req, run) => (req.status === "ok" ? run(req) : of(req));
@@ -251,12 +251,6 @@
                 toast.classList.add("show");
                 clearTimeout(toast._t);
                 toast._t = setTimeout(() => toast.classList.remove("show"), 1800);
-            };
-            const setStatus = (type, html) => {
-                const decStatus = $("decStatus");
-                decStatus.className = "notification " + (type === "ok" ? "is-success" : "is-danger") + " mt-4";
-                decStatus.innerHTML = html;
-                decStatus.style.display = "";
             };
             const openModal = (msg) => {
                 $("decModalMsg").textContent = msg;
@@ -277,7 +271,7 @@
                 if (state.status === "working") { setLoading(true); $("decOut").value = ""; }
                 else {
                     setLoading(false);
-                    if (state.status === "done") { $("decOut").value = state.value; setStatus("ok", "解密成功，认证通过。"); }
+                    if (state.status === "done") { $("decOut").value = state.value; showToast("解密成功，认证通过"); }
                     else if (state.status === "error") openModal("解密失败：" + state.msg + "。请检查密码和密文是否与加密时一致。");
                 }
             };
@@ -329,7 +323,6 @@
             bindEye($("encPass"), $("encEye"));
             bindEye($("decPass"), $("decEye"));
 
-            $("decStatus").addEventListener("click", () => { $("decStatus").style.display = "none"; });
             $("decModalOk").addEventListener("click", closeModal);
             document.querySelector("#decModal .delete").addEventListener("click", closeModal);
             document.querySelector("#decModal .modal-background").addEventListener("click", closeModal);
