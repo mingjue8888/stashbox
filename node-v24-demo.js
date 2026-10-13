@@ -13,8 +13,9 @@ const crypt = argon2idAes256gcm({
     console.time("encrypt");
     const encryptedText  = await crypt.encrypt(password, text);
     console.timeEnd("encrypt");
+    console.log(encryptedText);
     console.time("decrypt");
     const sourceText = await crypt.decrypt(password, encryptedText);
     console.timeEnd("decrypt");
-    console.log(encryptedText, sourceText);
+    console.log(sourceText);
 })();
