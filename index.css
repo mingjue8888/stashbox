@@ -1,5 +1,5 @@
 html { scroll-behavior: auto; }
-body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", "Noto Sans SC", sans-serif; }
+body { font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", "Times New Roman", serif; }
 .hero { background: #f5f7fb; }
 .hero .hero-dark { color: #000 !important; }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }

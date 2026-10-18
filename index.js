@@ -2,7 +2,7 @@
 (function () {
     "use strict";
     const $ = (id) => document.getElementById(id);
-    const { fromEvent, of, from, defer, pipe } = rxjs;
+    const { fromEvent, of, from, defer } = rxjs;
     const { map, switchMap, startWith, catchError } = rxjs.operators;
 
     /* ---------- 加密实例（参数写死，不暴露给用户） ---------- */
