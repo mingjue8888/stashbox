@@ -1,21 +1,23 @@
 const argon2id_aes256gcm = require("./argon2id-aes256gcm.umd.js");
 
-const password = "SuperPassword.123456.IamYourDaddy";
-const text = "Hello world!";
-
 const crypt = argon2id_aes256gcm({
     argonMemory: 262144,
     argonTimes: 32,
     argonParallelism: 2,
 });
 
-(async function() {
+async function testEncrypt(password, text) {
     console.time("encrypt");
-    const encryptedText  = await crypt.encrypt(password, text);
+    const encrypted = await crypt.encrypt(password, text);
     console.timeEnd("encrypt");
-    console.log(encryptedText);
+    console.log(encrypted);
+}
+
+async function testDecrypt(password, encryptedText) {
     console.time("decrypt");
-    const sourceText = await crypt.decrypt(password, encryptedText);
+    const decrypted = await crypt.decrypt(password, encryptedText);
     console.timeEnd("decrypt");
-    console.log(sourceText);
-})();
+    console.log(decrypted);
+}
+
+testEncrypt("PasswordDemo.123456", "Hello world!");
