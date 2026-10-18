@@ -305,7 +305,7 @@
                 noEnc: "ยังไม่มีข้อความที่เข้ารหัสให้คัดลอก", noPlain: "ยังไม่มีข้อความต้นฉบับให้คัดลอก"
             }
         },
-        t(key) { return this.dict[this.lang][key] != null ? this.dict[this.lang][key] : this.dict.zh[key]; },
+        t(key) { return this.dict[this.lang][key] != null ? this.dict[this.lang][key] : this.dict.en[key]; },
         apply() {
             document.title = this.t("browserTitle");
             document.querySelectorAll("[data-i18n]").forEach((el) => { el.innerHTML = this.t(el.dataset.i18n); });
