@@ -40,7 +40,7 @@
                 decOutPh: "解密结果将在这里显示，拿回你原有的明文后，请不要逗留太久，把浏览痕迹删掉",
                 btnCopyPlain: "复制明文",
                 footer1: "锁定算法：Argon2id · 内存 256MB · 迭代 32 次 · 并行度 2 · 盐 16B · 密钥长度 32B · AES-256-GCM · IV 12B · 认证 tag 16B · 密文格式 &lt;盐&gt;.&lt;iv&gt;.&lt;认证 tag&gt;.&lt;算法结果&gt;，每份密文独立随机盐，认证 tag 承载完整性校验，密文被篡改或密码错误将无法解密。",
-                footer2: "浏览器端运行，使用 Web Crypto 与 argon2-browser(WASM)，所有计算均在本机完成。<a href=\"https://github.com/mingjue8888/stashbox\">👉 点此查看源码 👈</a>",
+                footer2: "浏览器端运行，使用 Web Crypto 与 argon2-browser(WASM)，所有计算均在本机完成，<a href=\"https://github.com/mingjue8888/stashbox\">👉 点此查看源码 👈</a>",
                 passLen: "密码至少 16 位", passSpace: "密码中间不能有空格",
                 passLower: "密码需包含小写字母", passUpper: "密码需包含大写字母",
                 passNum: "密码需包含数字", passSym: "密码需包含标点符号",
