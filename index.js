@@ -26,7 +26,7 @@
 
     /* ---------- 国际化（右上角下拉框切换语言，文本可逐个校对） ---------- */
     const I18N = {
-        lang: lang || "zh",
+        lang: "zh",
         dict: {
             zh: {
                 title: "偷偷藏点私房钱",
@@ -317,7 +317,14 @@
         },
         init() {
             let stored = null;
-            try { const s = localStorage.getItem("stash_lang"); if (s && this.dict[s]) stored = s; } catch (e) {}
+            try {
+                if (lang && this.dict[lang]) {
+                    stored = lang;
+                } else {
+                    const s = localStorage.getItem("stash_lang");
+                    if (s && this.dict[s]) stored = s;
+                }
+            } catch (e) {}
             if (stored) { this.lang = stored; const sel = $("langSel"); if (sel) sel.value = stored; }
             this.apply();
         }
