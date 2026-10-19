@@ -20,9 +20,13 @@
     clearInputs();
     window.addEventListener("load", clearInputs);
 
+    /* ---------- 获取浏览器URL路径上的参数 ---------- */
+    const params = new URLSearchParams(window.location.search);
+    const lang = params.get("lang");
+
     /* ---------- 国际化（右上角下拉框切换语言，文本可逐个校对） ---------- */
     const I18N = {
-        lang: "zh",
+        lang: lang || "zh",
         dict: {
             zh: {
                 title: "偷偷藏点私房钱",
