@@ -320,6 +320,7 @@
             try {
                 if (lang && this.dict[lang]) {
                     stored = lang;
+                    localStorage.setItem("stash_lang", lang);
                 } else {
                     const s = localStorage.getItem("stash_lang");
                     if (s && this.dict[s]) stored = s;
